@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banker Dashboard - Bridge</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/dashboard.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">Bridge</div>
+                <button class="menu-toggle" id="menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">
+                    <img src="../assets/images/default-avatar.png" alt="User Avatar" id="user-avatar">
+                </div>
+                <div class="user-details">
+                    <h3 id="user-name">Loading...</h3>
+                    <p id="user-role">Banker</p>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active"><a href="dashboard-banker.html"><i class="icon-dashboard"></i> Dashboard</a></li>
+                    <li><a href="proposals.html"><i class="icon-proposals"></i> Business Proposals</a></li>
+                    <li><a href="loans.html"><i class="icon-loans"></i> My Loan Schemes</a></li>
+                    <li><a href="#" id="post-loan"><i class="icon-post"></i> Post Loan Scheme</a></li>
+                    <li><a href="#" id="profile-settings"><i class="icon-settings"></i> Profile Settings</a></li>
+                    <li><a href="#" id="logout-btn"><i class="icon-logout"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="dashboard-main">
+            <header class="dashboard-header">
+                <h1>Banker Dashboard</h1>
+                <div class="header-actions">
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search...">
+                        <button><i class="icon-search"></i></button>
+                    </div>
+                    <div class="notifications">
+                        <button><i class="icon-notifications"></i></button>
+                        <span class="notification-badge">1</span>
+                    </div>
+                    <div class="messages">
+                        <button><i class="icon-messages"></i></button>
+                        <span class="messages-badge">2</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="dashboard-overview">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="icon-loans"></i></div>
+                        <div class="stat-info">
+                            <h3>My Loan Schemes</h3>
+                            <p class="stat-number" id="loan-count">0</p>
+                            <p class="stat-description">Active schemes</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="icon-views"></i></div>
+                        <div class="stat-info">
+                            <h3>Scheme Views</h3>
+                            <p class="stat-number" id="view-count">0</p>
+                            <p class="stat-description">Total views</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="icon-messages"></i></div>
+                        <div class="stat-info">
+                            <h3>Messages</h3>
+                            <p class="stat-number" id="message-count">0</p>
+                            <p class="stat-description">Unread messages</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="icon-inquiries"></i></div>
+                        <div class="stat-info">
+                            <h3>Loan Inquiries</h3>
+                            <p class="stat-number" id="inquiry-count">0</p>
+                            <p class="stat-description">New inquiries</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-sections">
+                    <section class="my-loans">
+                        <div class="section-header">
+                            <h2>My Loan Schemes</h2>
+                            <button class="btn btn-primary" id="new-loan-btn">+ New Loan Scheme</button>
+                        </div>
+                        <div class="loan-list" id="my-loans-list">
+                            <!-- Loan schemes will be loaded here -->
+                            <div class="loading-spinner"></div>
+                        </div>
+                    </section>
+
+                    <section class="recent-proposals">
+                        <div class="section-header">
+                            <h2>Recent Business Proposals</h2>
+                            <a href="proposals.html" class="view-all">View All</a>
+                        </div>
+                        <div class="proposal-list" id="recent-proposals-list">
+                            <!-- Proposals will be loaded here -->
+                            <div class="loading-spinner"></div>
+                        </div>
+                    </section>
+                </div>
+
+                <section class="recent-activities">
+                    <div class="section-header">
+                        <h2>Recent Activities</h2>
+                    </div>
+                    <div class="activity-list" id="recent-activities-list">
+                        <!-- Activities will be loaded here -->
+                        <div class="loading-spinner"></div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Post Loan Scheme Modal -->
+    <div class="modal" id="loan-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Post Loan Scheme</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="loan-form">
+                    <div class="form-group">
+                        <label for="loan-title">Scheme Title</label>
+                        <input type="text" id="loan-title" name="loan-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loan-description">Description</label>
+                        <textarea id="loan-description" name="loan-description" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="loan-amount">Maximum Loan Amount (₹)</label>
+                        <input type="number" id="loan-amount" name="loan-amount" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="interest-rate">Interest Rate (%)</label>
+                        <input type="number" id="interest-rate" name="interest-rate" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loan-term">Loan Term (Months)</label>
+                        <input type="number" id="loan-term" name="loan-term" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="eligibility">Eligibility Criteria</label>
+                        <textarea id="eligibility" name="eligibility" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Target Business Types</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="business-type" value="startup"> Startups</label>
+                            <label><input type="checkbox" name="business-type" value="small"> Small Business</label>
+                            <label><input type="checkbox" name="business-type" value="medium"> Medium Enterprise</label>
+                            <label><input type="checkbox" name="business-type" value="large"> Large Enterprise</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Post Loan Scheme</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Settings Modal -->
+    <div class="modal" id="profile-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Profile Settings</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="profile-form">
+                    <div class="form-group">
+                        <label for="profile-name">Full Name</label>
+                        <input type="text" id="profile-name" name="profile-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="profile-email">Email Address</label>
+                        <input type="email" id="profile-email" name="profile-email" required disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="profile-bio">Bio</label>
+                        <textarea id="profile-bio" name="profile-bio" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="profile-avatar">Profile Picture</label>
+                        <input type="file" id="profile-avatar" name="profile-avatar" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label for="bank-name">Bank Name</label>
+                        <input type="text" id="bank-name" name="bank-name">
+                    </div>
+                    <div class="form-group">
+                        <label for="bank-position">Position</label>
+                        <input type="text" id="bank-position" name="bank-position">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/common.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/database.js"></script>
+    <script src="../assets/js/banker.js"></script>
+    <script src="../assets/js/logger.js"></script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Bridge</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Bridge</div>
+            <ul>
+                <li><a href="/index.html">Home</a></li>
+                <li><a href="login.html">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="auth-container">
+            <div class="auth-card">
+                <h2>Create an Account</h2>
+                <div class="role-selector">
+                    <h3>I am a:</h3>
+                    <div class="role-options">
+                        <label>
+                            <input type="radio" name="role" value="investor" id="role-investor">
+                            <span class="role-box">
+                                <span class="role-icon">💰</span>
+                                <span class="role-name">Investor</span>
+                            </span>
+                        </label>
+                        <label>
+                            <input type="radio" name="role" value="business" id="role-business">
+                            <span class="role-box">
+                                <span class="role-icon">👨‍💼</span>
+                                <span class="role-name">Entrepreneur</span>
+                            </span>
+                        </label>
+                        <label>
+                            <input type="radio" name="role" value="banker" id="role-banker">
+                            <span class="role-box">
+                                <span class="role-icon">🏦</span>
+                                <span class="role-name">Banker</span>
+                            </span>
+                        </label>
+                        <label>
+                            <input type="radio" name="role" value="advisor" id="role-advisor">
+                            <span class="role-box">
+                                <span class="role-icon">🧠</span>
+                                <span class="role-name">Advisor</span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <form id="register-form">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm Password</label>
+                        <input type="password" id="confirm-password" name="confirm-password" required minlength="6">
+                    </div>
+                    
+                    <!-- Investor-specific fields -->
+                    <div class="role-specific-fields" id="investor-fields">
+                        <div class="form-group">
+                            <label for="investment-range">Investment Range</label>
+                            <select id="investment-range" name="investment-range">
+                                <option value="0-100000">₹0 - ₹1 Lakh</option>
+                                <option value="100000-1000000">₹1 Lakh - ₹10 Lakhs</option>
+                                <option value="1000000-10000000">₹10 Lakhs - ₹1 Crore</option>
+                                <option value="10000000+">Above ₹1 Crore</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Preferred Industries</label>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" name="industry" value="tech"> Technology</label>
+                                <label><input type="checkbox" name="industry" value="healthcare"> Healthcare</label>
+                                <label><input type="checkbox" name="industry" value="education"> Education</label>
+                                <label><input type="checkbox" name="industry" value="finance"> Finance</label>
+                                <label><input type="checkbox" name="industry" value="retail"> Retail</label>
+                                <label><input type="checkbox" name="industry" value="other"> Other</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Business-specific fields -->
+                    <div class="role-specific-fields" id="business-fields">
+                        <div class="form-group">
+                            <label for="business-industry">Industry</label>
+                            <select id="business-industry" name="business-industry">
+                                <option value="tech">Technology</option>
+                                <option value="healthcare">Healthcare</option>
+                                <option value="education">Education</option>
+                                <option value="finance">Finance</option>
+                                <option value="retail">Retail</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="business-stage">Business Stage</label>
+                            <select id="business-stage" name="business-stage">
+                                <option value="idea">Idea Stage</option>
+                                <option value="prototype">Prototype</option>
+                                <option value="early-revenue">Early Revenue</option>
+                                <option value="growth">Growth Stage</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Banker-specific fields -->
+                    <div class="role-specific-fields" id="banker-fields">
+                        <div class="form-group">
+                            <label for="bank-name">Bank Name</label>
+                            <input type="text" id="bank-name" name="bank-name">
+                        </div>
+                        <div class="form-group">
+                            <label for="bank-position">Position</label>
+                            <input type="text" id="bank-position" name="bank-position">
+                        </div>
+                    </div>
+                    
+                    <!-- Advisor-specific fields -->
+                    <div class="role-specific-fields" id="advisor-fields">
+                        <div class="form-group">
+                            <label for="expertise">Areas of Expertise</label>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" name="expertise" value="business-strategy"> Business Strategy</label>
+                                <label><input type="checkbox" name="expertise" value="marketing"> Marketing</label>
+                                <label><input type="checkbox" name="expertise" value="finance"> Finance</label>
+                                <label><input type="checkbox" name="expertise" value="legal"> Legal</label>
+                                <label><input type="checkbox" name="expertise" value="operations"> Operations</label>
+                                <label><input type="checkbox" name="expertise" value="technology"> Technology</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="experience">Years of Experience</label>
+                            <input type="number" id="experience" name="experience" min="0">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="bio">Brief Bio</label>
+                        <textarea id="bio" name="bio" rows="3"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+                </form>
+                <div class="auth-footer">
+                    <p>Already have an account? <a href="login.html">Login</a></p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-bottom">
+            <p>&copy; 2023 Bridge. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../assets/js/common.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/logger.js"></script>
+    <script>
+        // Show/hide role-specific fields based on selection
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check URL parameters for pre-selected role
+            const urlParams = new URLSearchParams(window.location.search);
+            const roleParam = urlParams.get('role');
+            if (roleParam) {
+                const roleRadio = document.getElementById(`role-${roleParam}`);
+                if (roleRadio) roleRadio.checked = true;
+            }
+            
+            // Show/hide fields based on role selection
+            showRoleFields();
+            
+            // Add event listeners to role radio buttons
+            const roleRadios = document.querySelectorAll('input[name="role"]');
+            roleRadios.forEach(radio => {
+                radio.addEventListener('change', showRoleFields);
+            });
+            
+            function showRoleFields() {
+                // Hide all role-specific fields first
+                const allRoleFields = document.querySelectorAll('.role-specific-fields');
+                allRoleFields.forEach(field => {
+                    field.style.display = 'none';
+                });
+                
+                // Show the selected role's fields
+                const selectedRole = document.querySelector('input[name="role"]:checked');
+                if (selectedRole) {
+                    const roleFieldsId = `${selectedRole.value}-fields`;
+                    const roleFields = document.getElementById(roleFieldsId);
+                    if (roleFields) {
+                        roleFields.style.display = 'block';
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

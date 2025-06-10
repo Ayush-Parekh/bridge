@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investor Dashboard - Bridge</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/dashboard.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <a href="/index.html">
+
+                        Bridge
+                    </a>
+                </div>
+                <button class="menu-toggle" id="menu-toggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+            <div class="user-info">
+                <div class="user-avatar">
+                    <img src="../assets/images/default-avatar.png" alt="User Avatar" id="user-avatar">
+                </div>
+                <div class="user-details">
+                    <h3 id="user-name">Loading...</h3>
+                    <p id="user-role">Investor</p>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active"><a href="/pages/dashboard-investor.html"><i class="icon-dashboard"></i> Dashboard</a></li>
+                    <li><a href="proposals.html"><i class="icon-proposals"></i> Business Proposals</a></li>
+                    <li><a href="investments.html"><i class="icon-investments"></i> My Investments</a></li>
+                    <li><a href="loans.html"><i class="icon-loans"></i> Loan Schemes</a></li>
+                    <li><a href="qa.html"><i class="icon-qa"></i> Ask an Advisor</a></li>
+                    <li><a href="#" id="post-opportunity"><i class="icon-post"></i> Post Opportunity</a></li>
+                    <li><a href="#" id="profile-settings"><i class="icon-settings"></i> Profile Settings</a></li>
+                    <li><a href="#" id="logout-btn"><i class="icon-logout"></i> Logout</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="dashboard-main">
+            <header class="dashboard-header">
+                <h1>Investor Dashboard</h1>
+                <div class="header-actions">
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search...">
+                        <button><i class="icon-search"></i></button>
+                    </div>
+                    <div class="notifications">
+                        <button><i class="icon-notifications"></i></button>
+                        <span class="notification-badge">3</span>
+                    </div>
+                    <div class="messages">
+                        <button><i class="icon-messages"></i></button>
+                        <span class="messages-badge">5</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="dashboard-overview">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="icon-proposals"></i></div>
+                        <div class="stat-info">
+                            <h3>Business Proposals</h3>
+                            <p class="stat-number" id="proposal-count">0</p>
+                            <p class="stat-description">Available to review</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="icon-investments"></i></div>
+                        <div class="stat-info">
+                            <h3>My Investments</h3>
+                            <p class="stat-number" id="investment-count">0</p>
+                            <p class="stat-description">Active investments</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="icon-messages"></i></div>
+                        <div class="stat-info">
+                            <h3>Messages</h3>
+                            <p class="stat-number" id="message-count">0</p>
+                            <p class="stat-description">Unread messages</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="icon-opportunities"></i></div>
+                        <div class="stat-info">
+                            <h3>My Opportunities</h3>
+                            <p class="stat-number" id="opportunity-count">0</p>
+                            <p class="stat-description">Posted opportunities</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-sections">
+                    <section class="recent-proposals">
+                        <div class="section-header">
+                            <h2>Recent Business Proposals</h2>
+                            <a href="proposals.html" class="view-all">View All</a>
+                        </div>
+                        <div class="proposal-list" id="recent-proposals-list">
+                            <!-- Proposals will be loaded here -->
+                            <div class="loading-spinner"></div>
+                        </div>
+                    </section>
+
+                    <section class="recommended-proposals">
+                        <div class="section-header">
+                            <h2>Recommended For You</h2>
+                            <a href="proposals.html?filter=recommended" class="view-all">View All</a>
+                        </div>
+                        <div class="proposal-list" id="recommended-proposals-list">
+                            <!-- Recommended proposals will be loaded here -->
+                            <div class="loading-spinner"></div>
+                        </div>
+                    </section>
+                </div>
+
+                <section class="recent-activities">
+                    <div class="section-header">
+                        <h2>Recent Activities</h2>
+                    </div>
+                    <div class="activity-list" id="recent-activities-list">
+                        <!-- Activities will be loaded here -->
+                        <div class="loading-spinner"></div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Post Opportunity Modal -->
+    <div class="modal" id="opportunity-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Post Investment Opportunity</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="opportunity-form">
+                    <div class="form-group">
+                        <label for="opportunity-title">Title</label>
+                        <input type="text" id="opportunity-title" name="opportunity-title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="opportunity-description">Description</label>
+                        <textarea id="opportunity-description" name="opportunity-description" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="min-investment">Minimum Investment (₹)</label>
+                        <input type="number" id="min-investment" name="min-investment" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="max-investment">Maximum Investment (₹)</label>
+                        <input type="number" id="max-investment" name="max-investment" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Preferred Industries</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="preferred-industry" value="tech"> Technology</label>
+                            <label><input type="checkbox" name="preferred-industry" value="healthcare"> Healthcare</label>
+                            <label><input type="checkbox" name="preferred-industry" value="education"> Education</label>
+                            <label><input type="checkbox" name="preferred-industry" value="finance"> Finance</label>
+                            <label><input type="checkbox" name="preferred-industry" value="retail"> Retail</label>
+                            <label><input type="checkbox" name="preferred-industry" value="other"> Other</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Post Opportunity</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Settings Modal -->
+    <div class="modal" id="profile-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Profile Settings</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="profile-form">
+                    <div class="form-group">
+                        <label for="profile-name">Full Name</label>
+                        <input type="text" id="profile-name" name="profile-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="profile-email">Email Address</label>
+                        <input type="email" id="profile-email" name="profile-email" required disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="profile-bio">Bio</label>
+                        <textarea id="profile-bio" name="profile-bio" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="profile-avatar">Profile Picture</label>
+                        <input type="file" id="profile-avatar" name="profile-avatar" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label for="investment-range">Investment Range</label>
+                        <select id="investment-range" name="investment-range">
+                            <option value="0-100000">₹0 - ₹1 Lakh</option>
+                            <option value="100000-1000000">₹1 Lakh - ₹10 Lakhs</option>
+                            <option value="1000000-10000000">₹10 Lakhs - ₹1 Crore</option>
+                            <option value="10000000+">Above ₹1 Crore</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Preferred Industries</label>
+                        <div class="checkbox-group">
+                            <label><input type="checkbox" name="industry" value="tech"> Technology</label>
+                            <label><input type="checkbox" name="industry" value="healthcare"> Healthcare</label>
+                            <label><input type="checkbox" name="industry" value="education"> Education</label>
+                            <label><input type="checkbox" name="industry" value="finance"> Finance</label>
+                            <label><input type="checkbox" name="industry" value="retail"> Retail</label>
+                            <label><input type="checkbox" name="industry" value="other"> Other</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/common.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script src="../assets/js/database.js"></script>
+    <script src="../assets/js/investor.js"></script>
+    <script src="../assets/js/logger.js"></script>
+</body>
+</html>

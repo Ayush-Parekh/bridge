@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bridge - Connect Investors & Entrepreneurs</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Bridge</div>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#features">Features</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="/pages/login.html" class="btn-login">Login</a></li>
+                <li><a href="/pages/register.html" class="btn-register">Register</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Connecting Ideas with Capital</h1>
+                <p>Bridge the gap between innovative business ideas and investors looking for opportunities.</p>
+                <div class="cta-buttons">
+                    <a href="pages/register.html?role=business" class="btn btn-primary">I Have a Business Idea</a>
+                    <a href="pages/register.html?role=investor" class="btn btn-secondary">I'm an Investor</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="about">
+            <h2>About the Platform</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>In India, there's a significant communication gap between people with innovative startup ideas and those with the funds to make them a reality. Our platform aims to bridge this gap by providing a unified space where:</p>
+                    <ul>
+                        <li>Entrepreneurs can showcase their business ideas</li>
+                        <li>Investors can discover promising startups</li>
+                        <li>Bankers can offer financial solutions</li>
+                        <li>Business advisors can provide expert guidance</li>
+                    </ul>
+                </div>
+                <div class="about-image">
+                    <!-- <img src="../assets/images/about-illustration.png" alt="Platform illustration"> -->
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="features">
+            <h2>Key Features</h2>
+            <div class="feature-cards">
+                <div class="feature-card">
+                    <div class="feature-icon">👨‍💼</div>
+                    <h3>For Entrepreneurs</h3>
+                    <p>Post your business ideas, get feedback, and connect with potential investors.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>For Investors</h3>
+                    <p>Discover promising startups, evaluate business plans, and invest in the next big thing.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🏦</div>
+                    <h3>For Bankers</h3>
+                    <p>Offer loan schemes and financial advice to growing businesses.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3>For Advisors</h3>
+                    <p>Share your expertise and guide entrepreneurs and investors through the process.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact">
+            <h2>Contact Us</h2>
+            <form id="contact-form">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Send Message</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo">Bridge</div>
+            <div class="footer-links">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4>User Types</h4>
+                <ul>
+                    <li><a href="pages/register.html?role=business">Entrepreneurs</a></li>
+                    <li><a href="pages/register.html?role=investor">Investors</a></li>
+                    <li><a href="pages/register.html?role=banker">Bankers</a></li>
+                    <li><a href="pages/register.html?role=advisor">Advisors</a></li>
+                </ul>
+            </div>
+            <div class="footer-newsletter">
+                <h4>Stay Updated</h4>
+                <p>Subscribe to our newsletter for the latest updates.</p>
+                <form id="newsletter-form">
+                    <input type="email" placeholder="Your email address" required>
+                    <button type="submit" class="btn btn-secondary">Subscribe</button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 Bridge. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../assets/js/common.js"></script>
+    <script src="../assets/js/logger.js"></script>
+</body>
+</html>
